@@ -1,0 +1,295 @@
+/* General Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Container */
+.container {
+    width: 85%;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 1200px;
+    text-align: center;
+}
+
+/* Headings */
+h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+h3 {
+    font-size: 1.8rem;
+    color: #666;
+}
+
+/* Centered Quiz Description */
+.quiz-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form .form-section {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form input[type="file"]
+{
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    width: 100%;  /* Ensure inputs take the full width */
+    box-sizing: border-box;  /* Include padding and border in the width calculation */
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus 
+form input[type="number"]:focus  
+form input[type="file"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+form input[type="text"]:invalid {
+    border-color: red;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Error message for student ID */
+#student_id_error {
+    font-size: 12px;
+    margin-top: 5px;
+    color: red;
+}
+
+/* Quiz Card List */
+.quiz-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Grid with auto-adjusting columns */
+    gap: 40px; /* Reduced gap between quiz cards */
+    margin-bottom: 40px;
+    padding: 0; /* Make sure no padding affects the gap */
+}
+
+/* Quiz Card */
+.quiz-card {
+    background-color: #fff;
+    padding: 15px;  /* Reduced padding for compactness */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0; /* Ensures no external margins are affecting the layout */
+}
+
+/* Hover effect */
+.quiz-card:hover {
+    transform: scale(1.05);
+}
+
+/* Quiz cover image */
+.quiz-cover {
+    width: 100%;
+    height: 180px;  /* Slightly reduced height for better alignment */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Quiz info section */
+.quiz-info {
+    margin-top: 15px;
+}
+
+.quiz-info h4 {
+    color: #4CAF50;
+    font-size: 1.5rem;  /* Slightly reduced font size for title */
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.quiz-info p {
+    color: #777;
+    font-size: 13px;  /* Reduced font size for description */
+    margin-bottom: 15px;
+}
+
+/* Button styling */
+.button {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    margin-top: 10px;  /* Reduced margin for compactness */
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design for Quiz Cards */
+@media screen and (max-width: 768px) {
+    .quiz-card {
+        width: 48%;  /* Two cards per row on smaller screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .quiz-card {
+        width: 100%;  /* One card per row on very small screens */
+    }
+}
+
+/* Edit Button */
+.edit-button {
+    background-color: #FFC107;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+/* Login Button */
+.login-button {
+    background-color: #28a745;
+}
+
+.login-button:hover {
+    background-color: #218838;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+table td {
+    color: #555;
+}
+
+table td a {
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+table td a:hover {
+    color: #0056b3;
+}
+
+/* Header and Navigation */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+header .logo img {
+    width: 50px;
+	height: 50px;
+}
+
+header .nav-menu a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+}
+
+header .nav-menu a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design for Quiz Cards */
+@media screen and (max-width: 768px) {
+    .quiz-card {
+        width: 48%; /* Two cards per row on smaller screens */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .quiz-card {
+        width: 100%; /* One card per row on very small screens */
+    }
+}
