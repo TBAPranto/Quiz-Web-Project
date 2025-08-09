@@ -21,19 +21,6 @@ if (isset($_GET['delete_user'])) {
     }
 }
 
-// Handle deleting quizzes
-if (isset($_GET['delete_quiz'])) {
-    $quiz_id = $_GET['delete_quiz'];
-    $delete_sql = "DELETE FROM quizzes WHERE id='$quiz_id'";
-    if ($conn->query($delete_sql) === TRUE) {
-        $message = "Quiz deleted successfully!";
-        $status = "success";
-    } else {
-        $message = "Error deleting quiz: " . $conn->error;
-        $status = "error";
-    }
-}
-
 // Handle approving or rejecting role change requests
 if (isset($_GET['approve_request'])) {
     $message_id = $_GET['approve_request'];
@@ -173,7 +160,7 @@ $message_result = $conn->query($message_sql);
                 <tr>
                     <td><?php echo $quiz['title']; ?></td>
                     <td><?php echo $quiz['description']; ?></td>
-                    <td><a href="dashboard.php?delete_quiz=<?php echo $quiz['id']; ?>">Delete</a></td>
+                    <td><a href="delete_quiz.php?quiz_id=<?php echo $quiz['id']; ?>">Delete</a></td>
                 </tr>
             <?php endwhile; ?>
         </table>

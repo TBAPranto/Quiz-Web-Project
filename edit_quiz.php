@@ -20,8 +20,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Check if the logged-in user is a teacher
-if ($user['role'] !== 'teacher') {
+// Check if the logged-in user is a teacher or admin
+if ($user['role'] !== 'teacher' && $user['role'] !== 'admin') {
     // Redirect non-teachers to the account page (or any other page you prefer)
     header("Location: account.php");
     exit;
@@ -99,23 +99,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("siis", $question_text, $score, $correct_option, $question_id);
         $stmt->execute();
 
-		// Update options
-		foreach ($question_data['options'] as $option_id => $option_text) {
-			// Check if the option is the correct one
-			$is_correct = ($option_id == $correct_option) ? 1 : 0;
+        // Update options
+        foreach ($question_data['options'] as $option_id => $option_data) {
+            $option_text = $option_data['option_text'];
 
-			// Update option and set is_correct flag
-			$update_option_sql = "UPDATE options SET option_text = ?, is_correct = ? WHERE id = ?";
-			$stmt = $conn->prepare($update_option_sql);
-			$stmt->bind_param("sii", $option_text, $is_correct, $option_id);
-			$stmt->execute();
-		}
+            // Set 'is_correct' to 1 if the option_id matches the correct_option
+            $is_correct = ($option_id == $correct_option) ? 1 : 0;
+
+            // Update option
+            $update_option_sql = "UPDATE options SET option_text = ?, is_correct = ? WHERE id = ?";
+            $stmt = $conn->prepare($update_option_sql);
+            $stmt->bind_param("sii", $option_text, $is_correct, $option_id);
+            $stmt->execute();
+        }
     }
 
-	echo "<script>alert('Quiz updated successfully!');</script>";
-	header("Location: account.php");
-	exit;
-
+    echo "<script>alert('Quiz updated successfully!');</script>";
+    header("Location: account.php");
+    exit;
 }
 ?>
 
@@ -166,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			<h3>Questions</h3>
 			<?php foreach ($quiz_data as $row) : ?>
 				<!-- Display each question only once -->
+				
 				<?php if (!isset($displayed_questions[$row['question_id']])) : ?>
 					<div class="question-section">
 						<input type="hidden" name="questions[<?php echo $row['question_id']; ?>][question_id]" value="<?php echo $row['question_id']; ?>">
@@ -189,11 +191,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						</select>
 
 						<!-- Display options dynamically -->
-						<h4>Options</h4>
 						<?php foreach ($options_for_question as $option) : ?>
 							<div class="option-section">
-								<label for="option_<?php echo $row['question_id']; ?>_<?php echo $option['option_id']; ?>">Option <?php echo $option['option_id']; ?>:</label>
-								<input type="text" name="questions[<?php echo $row['question_id']; ?>][options][<?php echo $option['option_id']; ?>]" value="<?php echo htmlspecialchars($option['option_text']); ?>" required>
+								<label for="option_<?php echo $row['question_id']; ?>">Option:</label>
+								<input type="text" name="questions[<?php echo $row['question_id']; ?>][options][<?php echo $option['option_id']; ?>][option_text]" value="<?php echo htmlspecialchars($option['option_text']); ?>" required>
 							</div>
 						<?php endforeach; ?>
 					</div>

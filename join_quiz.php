@@ -110,28 +110,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h3>Your Quiz Starts!</h3>
 
             <?php
-            // Fetch the questions for this quiz
-            $questions_query = "SELECT * FROM questions WHERE quiz_id = $quiz_id";
-            $questions_result = mysqli_query($conn, $questions_query);
-            $question_number = 1;
+			// Fetch the questions for this quiz
+			$questions_query = "SELECT * FROM questions WHERE quiz_id = $quiz_id";
+			$questions_result = mysqli_query($conn, $questions_query);
+			$question_number = 1;
 
-            while ($question = mysqli_fetch_assoc($questions_result)) {
-                echo "<div class='question'>";
-                echo "<strong>" . $question_number++ . ". " . $question['question_text'] . "</strong>";
-                
-                // Fetch options for this question
-                $options_query = "SELECT * FROM options WHERE question_id = " . $question['id'];
-                $options_result = mysqli_query($conn, $options_query);
+			while ($question = mysqli_fetch_assoc($questions_result)) {
+				echo "<div class='question'>";
+				echo "<strong>" . $question_number++ . ". " . htmlspecialchars($question['question_text'], ENT_QUOTES, 'UTF-8') . "</strong>";
+				
+				// Fetch options for this question
+				$options_query = "SELECT * FROM options WHERE question_id = " . $question['id'];
+				$options_result = mysqli_query($conn, $options_query);
 
-                echo "<div class='options'>";
-                while ($option = mysqli_fetch_assoc($options_result)) {
-                    echo "<label class='option'>";
-                    echo "<input type='radio' name='questions[" . $question['id'] . "]' value='" . $option['id'] . "'>";
-                    echo " " . $option['option_text'];
-                    echo "</label>";
-                }
-                echo "</div></div>";
-            }
+				echo "<div class='options'>";
+				while ($option = mysqli_fetch_assoc($options_result)) {
+					echo "<label class='option'>";
+					echo "<input type='radio' name='questions[" . $question['id'] . "]' value='" . $option['id'] . "'>";
+					echo " " . htmlspecialchars($option['option_text'], ENT_QUOTES, 'UTF-8');
+					echo "</label>";
+				}
+				echo "</div></div>";
+			}
             ?>
 
             <button type="submit">Submit Quiz</button>

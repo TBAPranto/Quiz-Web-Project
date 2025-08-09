@@ -34,13 +34,6 @@ h3 {
     color: #666;
 }
 
-/* Centered Quiz Description */
-.quiz-description {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #777;
-    margin-bottom: 20px;
-}
 
 /* Form Styling */
 form {
@@ -63,7 +56,57 @@ form .form-section {
 form label {
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+	text-align: left;
+    display: block; /* Ensures the label is block level, taking full width */
+	margin-top: 8px;
+}
+
+form select {
+    font-weight: 600;
+    color: #333;
+	text-align: left;
+    display: block; /* Ensures the label is block level, taking full width */
+	margin-top: 8px;
+}
+
+/* Style for invalid inputs */
+form input:invalid, form textarea:invalid {
+    border-color: red;
+}
+
+/* Style for valid inputs */
+form input:valid, form textarea:valid {
+    border-color: #4CAF50;
+}
+
+/* Optional: Highlight the input fields on focus */
+form input:focus, form textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Styling for the error alert */
+.error-message {
+    font-size: 14px;
+    color: red;
+    margin-top: 5px;
+}
+
+/* Style for the textarea */
+textarea {
+    width: 95%;  /* Makes the textarea take the full width */
+    height: 60px; /* Adjust the height as needed */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    resize: vertical;  /* Allows the user to resize the height */
+}
+
+/* Optional: Add focus effect */
+textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
 }
 
 form input[type="text"],
@@ -116,6 +159,51 @@ button[type="submit"]:hover {
     color: red;
 }
 
+/* Styling for the question and options */
+.question {
+    text-align: left; /* Align questions to the left */
+    margin-bottom: 20px;
+}
+
+.question strong {
+    font-size: 1.2rem;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left; /* Align options to the left */
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.option input {
+    margin-right: 10px;
+}
+
+/* Add a line separator for questions */
+.question-section {
+    margin-bottom: 20px; /* Space between each question */
+    padding-bottom: 20px; /* Space between the content and the line */
+    border-bottom: 2px solid #ccc; /* Adds the line under each question */
+}
+
+/* Centered Quiz Description */
+.quiz-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #777;
+    margin-bottom: 20px;
+}
+
 /* Quiz Card List */
 .quiz-list {
     display: grid;
@@ -133,7 +221,7 @@ button[type="submit"]:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s ease-in-out;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
     margin: 0; /* Ensures no external margins are affecting the layout */

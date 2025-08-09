@@ -2,8 +2,8 @@
 session_start();
 include('includes/db_connect.php');
 
-// Ensure the user is logged in as a teacher
-if ($_SESSION['user_role'] != 'teacher') {
+// Ensure the user is logged in as a teacher or admin
+if ($_SESSION['user_role'] != 'teacher' && $_SESSION['user_role'] != 'admin') {
     header("Location: index.php");
     exit();
 }

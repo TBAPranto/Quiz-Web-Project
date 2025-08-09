@@ -59,13 +59,22 @@ session_start();
                 echo "<div class='quiz-info'>";
                 echo "<h4>" . $quiz['title'] . "</h4>";
                 echo "<p>" . $quiz['description'] . "</p>";
+
                 if (isset($_SESSION['user_id'])) {
-                    // Show different options based on user role
-                    if ($_SESSION['user_role'] == 'teacher') {
-						echo "<a href='edit_quiz.php?quiz_id={$quiz['id']}' class='button'>Edit Quiz</a> | ";
-						echo "<a href='delete_quiz.php?quiz_id={$quiz['id']}' class='button'>Delete Quiz</a>";
+                    // Get the logged-in user's role and ID
+                    $user_role = $_SESSION['user_role'];
+                    $user_id = $_SESSION['user_id'];
+
+                    // Show different options based on user role and quiz ownership
+                    if ($quiz['created_by'] == $user_id) {
+                        // If the user is the creator of the quiz
+                        if ($user_role == 'teacher' || $user_role == 'admin') {
+                            echo "<a href='edit_quiz.php?quiz_id={$quiz['id']}' class='button'>Edit Quiz</a> | ";
+                            echo "<a href='delete_quiz.php?quiz_id={$quiz['id']}' class='button'>Delete Quiz</a>";
+                        }
                     } else {
-                        echo "<a href='join_quiz.php?quiz_id=" . $quiz['id'] . "' class='button'>Take Quiz</a>";
+                        // If the user is not the creator, allow them to join the quiz
+                        echo "<a href='join_quiz.php?quiz_id={$quiz['id']}' class='button'>Take Quiz</a>";
                     }
                 } else {
                     echo "<a href='login.php' class='button'>Login to Take Quiz</a>";

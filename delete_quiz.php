@@ -20,8 +20,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Check if the logged-in user is a teacher
-if ($user['role'] !== 'teacher') {
+// Check if the logged-in user is a teacher or admin
+if ($user['role'] !== 'teacher'&&$user['role'] !== 'admin') {
     // Redirect non-teachers to the account page
     header("Location: account.php");
     exit;

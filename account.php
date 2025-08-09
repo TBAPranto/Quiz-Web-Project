@@ -73,7 +73,7 @@ if (isset($_POST['send_request'])) {
 		<a href="edit_account.php" class="button">Edit Profile</a>
 
         <!-- Student Section -->
-        <?php if ($user['role'] == 'student'): ?>
+        <?php if ($user['role'] == 'student' || $user['role'] == 'admin'): ?>
             <h3>Request Role Change</h3>
             <form action="account.php" method="POST">
                 <textarea name="message" placeholder="Request to be a teacher..." required></textarea>
@@ -99,7 +99,7 @@ if (isset($_POST['send_request'])) {
                 if ($quiz_result->num_rows > 0) {
                     while ($quiz = $quiz_result->fetch_assoc()) {
                         echo "<div class='quiz-card'>";
-                        echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-img'>";
+                        echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-cover'>";
                         echo "<div class='quiz-info'>";
                         echo "<h4>{$quiz['title']}</h4>";
                         echo "<p>{$quiz['description']}</p>";
@@ -114,7 +114,7 @@ if (isset($_POST['send_request'])) {
         <?php endif; ?>
 
         <!-- Teacher Section -->
-        <?php if ($user['role'] == 'teacher'): ?>
+        <?php if ($user['role'] == 'teacher' || $user['role'] == 'admin'): ?>
             <h3>Create a New Quiz</h3>
             <a href="create_quiz.php" class="button">Create a Quiz</a>
 
@@ -126,7 +126,7 @@ if (isset($_POST['send_request'])) {
             $quiz_result = $conn->query($quiz_sql);
             while ($quiz = $quiz_result->fetch_assoc()) {
                 echo "<div class='quiz-card'>";
-                echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-img'>";
+                echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-cover'>";
                 echo "<div class='quiz-info'>";
                 echo "<h4>{$quiz['title']}</h4>";
                 echo "<p>{$quiz['description']}</p>";
@@ -171,8 +171,8 @@ if (isset($_POST['send_request'])) {
         <?php endif; ?>
 
         <!-- Student Quiz Results -->
-        <?php if ($user['role'] == 'student'): ?>
-            <h3>Your Quiz Results</h3>
+        <?php if ($user['role'] == 'student' || $user['role'] == 'admin'): ?>
+            <h3>Your Results</h3>
             <table class="table">
                 <tr>
                     <th>Quiz Title</th>

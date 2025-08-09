@@ -2,16 +2,16 @@
 session_start();
 include('includes/db_connect.php');
 
-// Ensure the user is logged in as a teacher
-if ($_SESSION['user_role'] != 'teacher') {
-    header("Location: index.php");
+// Ensure the user is logged in as a teacher or admin
+if ($_SESSION['user_role'] != 'teacher' && $_SESSION['user_role'] != 'admin') {
+    header("Location: account.php");
     exit();
 }
 
 if (isset($_POST['create_quiz'])) {
     // Get the data from the form
-    $quiz_title = $_POST['quiz_title'];
-    $quiz_description = $_POST['quiz_description'];
+    $quiz_title = mysqli_real_escape_string($conn, $_POST['quiz_title']);
+    $quiz_description = mysqli_real_escape_string($conn, $_POST['quiz_description']);
     $cover_image = $_FILES['cover_image']['name'] ? $_FILES['cover_image']['name'] : 'default_cover.jpg';
     $num_questions = $_POST['num_questions'];
     $num_options = $_POST['num_options']; // Number of options per question
@@ -43,6 +43,37 @@ if (isset($_POST['create_quiz'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Quiz</title>
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        function validateForm() {
+            // Validate the text input
+            var title = document.forms["quizForm"]["quiz_title"].value;
+            var description = document.forms["quizForm"]["quiz_description"].value;
+            var numQuestions = document.forms["quizForm"]["num_questions"].value;
+            var numOptions = document.forms["quizForm"]["num_options"].value;
+
+            // Check if the title and description are not empty
+            if (title.trim() == "") {
+                alert("Quiz title must be filled out.");
+                return false;
+            }
+            if (description.trim() == "") {
+                alert("Quiz description must be filled out.");
+                return false;
+            }
+
+            // Check if num_questions and num_options are positive integers and not empty
+            if (numQuestions.trim() == "" || numQuestions <= 0 || isNaN(numQuestions)) {
+                alert("Please enter a valid positive number for the number of questions.");
+                return false;
+            }
+            if (numOptions.trim() == "" || numOptions <= 0 || isNaN(numOptions)) {
+                alert("Please enter a valid positive number for the number of options per question.");
+                return false;
+            }
+
+            return true; // All checks passed, form can be submitted
+        }
+    </script>
 </head>
 <body>
 	
@@ -62,7 +93,7 @@ if (isset($_POST['create_quiz'])) {
 			</div>
 		</header>
         <h2>Create a New Quiz</h2>
-        <form action="create_quiz.php" method="POST" enctype="multipart/form-data">
+        <form name="quizForm" action="create_quiz.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <input type="text" name="quiz_title" placeholder="Quiz Title" required>
             <textarea name="quiz_description" placeholder="Quiz Description" required></textarea>
             <input type="file" name="cover_image">
