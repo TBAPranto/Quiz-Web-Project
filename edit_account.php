@@ -1,4 +1,4 @@
-<?php
+<?php 
 // Include the database connection
 include('includes/db_connect.php');
 
@@ -15,17 +15,34 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user data excluding id, role, and created_at
-$sql = "SELECT name, email, profile_image FROM users WHERE id = ?";
+$sql = "SELECT id, name, email, profile_image, role FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user_data = $result->fetch_assoc();
 
+// Check if the logged-in user is an admin and if they are editing their own account or another user
+if ($_SESSION['user_role'] == 'admin' && isset($_GET['id']) && $_GET['id'] != $user_id) {
+    // Fetch the user details that the admin is editing
+    $edit_user_id = $_GET['id'];
+    $sql = "SELECT id, name, email, profile_image, role FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $edit_user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user_data = $result->fetch_assoc();
+} elseif ($_SESSION['user_role'] != 'admin' && isset($_GET['id']) && $_GET['id'] != $user_id) {
+    // If a non-admin tries to edit another user's account, redirect back
+    header("Location: account.php");
+    exit();
+}
+
 // If form is submitted, update user information
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
+    $role = $_POST['role']; // Role field added for admin editing roles
 
     // Handle profile image upload
     if ($_FILES['profile_image']['name']) {
@@ -47,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Update user information in the database
-    $update_sql = "UPDATE users SET name = ?, email = ?, profile_image = ? WHERE id = ?";
+    $update_sql = "UPDATE users SET name = ?, email = ?, profile_image = ?, role = ? WHERE id = ?";
     $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("sssi", $name, $email, $image_name, $user_id);
+    $update_stmt->bind_param("ssssi", $name, $email, $image_name, $role, $user_data['id']);
 
     if ($update_stmt->execute()) {
         echo "<script>alert('Account updated successfully!')</script>";
@@ -84,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <h2>Edit Your Account</h2>
         
-        <form action="edit_account.php" method="POST" enctype="multipart/form-data">
+        <form action="edit_account.php<?php if ($_SESSION['user_role'] == 'admin') { echo '?id=' . $user_data['id']; } ?>" method="POST" enctype="multipart/form-data">
             <div class="form-section">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user_data['name']); ?>" required>
@@ -104,6 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <p>Current image: <img src="images/default.jpg" alt="Default Image" width="100"></p>
                 <?php endif; ?>
             </div>
+
+            <!-- Only show the role dropdown if the logged-in user is an admin -->
+            <?php if ($_SESSION['user_role'] == 'admin'): ?>
+                <div class="form-section">
+                    <label for="role">Role:</label>
+                    <select name="role" id="role" required>
+                        <option value="student" <?php echo $user_data['role'] == 'student' ? 'selected' : ''; ?>>Student</option>
+                        <option value="teacher" <?php echo $user_data['role'] == 'teacher' ? 'selected' : ''; ?>>Teacher</option>
+                        <option value="admin" <?php echo $user_data['role'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
+                    </select>
+                </div>
+            <?php endif; ?>
 
             <button type="submit">Update Account</button>
         </form>

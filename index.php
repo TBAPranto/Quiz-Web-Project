@@ -74,7 +74,7 @@ session_start();
                         }
                     } else {
                         // If the user is not the creator, allow them to join the quiz
-                        echo "<a href='join_quiz.php?quiz_id={$quiz['id']}' class='button'>Take Quiz</a>";
+                        echo "<a href='join_quiz.php?quiz_id={$quiz['id']}' class='button'>Join Quiz</a>";
                     }
                 } else {
                     echo "<a href='login.php' class='button'>Login to Take Quiz</a>";

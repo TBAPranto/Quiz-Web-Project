@@ -21,39 +21,15 @@ if (isset($_GET['delete_user'])) {
     }
 }
 
-// Handle approving or rejecting role change requests
-if (isset($_GET['approve_request'])) {
-    $message_id = $_GET['approve_request'];
-    // Mark the message as approved
-    $update_sql = "UPDATE messages SET status='approved' WHERE id='$message_id'";
-    if ($conn->query($update_sql) === TRUE) {
-        // Get the student ID from the message
-        $message_sql = "SELECT sender_id FROM messages WHERE id='$message_id'";
-        $message_result = $conn->query($message_sql);
-        $message = $message_result->fetch_assoc();
-        $student_id = $message['sender_id'];
-
-        // Update the user's role to teacher
-        $role_sql = "UPDATE users SET role='teacher' WHERE id='$student_id'";
-        $conn->query($role_sql);
-
-        $message = "Role change request approved!";
+// Handle deleting quizzes
+if (isset($_GET['delete_quiz'])) {
+    $quiz_id = $_GET['delete_quiz'];
+    $delete_sql = "DELETE FROM quizzes WHERE id='$quiz_id'";
+    if ($conn->query($delete_sql) === TRUE) {
+        $message = "Quiz deleted successfully!";
         $status = "success";
     } else {
-        $message = "Error approving request: " . $conn->error;
-        $status = "error";
-    }
-}
-
-if (isset($_GET['reject_request'])) {
-    $message_id = $_GET['reject_request'];
-    // Mark the message as rejected
-    $update_sql = "UPDATE messages SET status='rejected' WHERE id='$message_id'";
-    if ($conn->query($update_sql) === TRUE) {
-        $message = "Role change request rejected.";
-        $status = "success";
-    } else {
-        $message = "Error rejecting request: " . $conn->error;
+        $message = "Error deleting quiz: " . $conn->error;
         $status = "error";
     }
 }
@@ -65,12 +41,10 @@ $user_result = $conn->query($user_sql);
 $quiz_sql = "SELECT * FROM quizzes";
 $quiz_result = $conn->query($quiz_sql);
 
-// Updated SQL for Role Change Requests - Including user name and email
-$message_sql = "SELECT messages.id, messages.message, messages.status, users.name, users.email 
+$message_sql = "SELECT messages.id, messages.message, users.name, users.email, messages.sender_id 
                 FROM messages
                 JOIN users ON messages.sender_id = users.id
-                WHERE messages.status='pending'";
-
+                WHERE messages.receiver_id = 1"; // Assuming admin has ID = 1
 $message_result = $conn->query($message_sql);
 ?>
 
@@ -95,6 +69,13 @@ $message_result = $conn->query($message_sql);
             }, 3000);
         }
 
+        // Confirmation before delete operation
+        function confirmDelete(message, url) {
+            if (confirm(message)) {
+                window.location.href = url; // Proceed with the delete operation if confirmed
+            }
+        }
+
         window.onload = function() {
             <?php if (isset($message)) { ?>
                 showPopup("<?php echo $message; ?>", "<?php echo $status; ?>");
@@ -104,26 +85,26 @@ $message_result = $conn->query($message_sql);
 </head>
 <body>
     <div class="container">
-		<!-- Header with Navigation Menu -->
-		<header>
-			<div class="logo">
-				<img src="images/logo.png" alt="Quiz Logo" width="150">
-			</div>
-			<div class="nav-menu">
-				<a href="account.php">My Account</a> | 
-				<a href="index.php">Home</a> | 
-				<a href="logout.php">Logout</a>
-			</div>
-		</header>
+        <header>
+            <div class="logo">
+                <img src="images/logo.png" alt="Quiz Logo" width="150">
+            </div>
+            <div class="nav-menu">
+                <a href="account.php">My Account</a> | 
+                <a href="index.php">Home</a> | 
+                <a href="logout.php">Logout</a>
+            </div>
+        </header>
+        
         <h2>Admin Dashboard</h2>
 
-        <h3>Role Change Requests</h3>
+        <!-- User's Messages -->
+        <h3>User's Messages</h3>
         <table>
             <tr>
                 <th>User Name</th>
                 <th>Email</th>
                 <th>Message</th>
-                <th>Status</th>
                 <th>Action</th>
             </tr>
             <?php while ($message = $message_result->fetch_assoc()): ?>
@@ -131,15 +112,14 @@ $message_result = $conn->query($message_sql);
                     <td><?php echo $message['name']; ?></td>
                     <td><?php echo $message['email']; ?></td>
                     <td><?php echo $message['message']; ?></td>
-                    <td><?php echo ucfirst($message['status']); ?></td>
                     <td>
-                        <a href="dashboard.php?approve_request=<?php echo $message['id']; ?>">Approve</a> |
-                        <a href="dashboard.php?reject_request=<?php echo $message['id']; ?>">Reject</a>
+                        <a href="inbox.php?receiver_id=<?php echo $message['sender_id']; ?>">Reply</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
         </table>
 
+        <!-- Users Table -->
         <h3>Users</h3>
         <table>
             <tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr>
@@ -148,19 +128,35 @@ $message_result = $conn->query($message_sql);
                     <td><?php echo $user['name']; ?></td>
                     <td><?php echo $user['email']; ?></td>
                     <td><?php echo ucfirst($user['role']); ?></td>
-                    <td><a href="dashboard.php?delete_user=<?php echo $user['id']; ?>">Delete</a></td>
+                    <td>
+                        <a href="edit_account.php?id=<?php echo $user['id']; ?>">Edit</a> |
+                        <a href="javascript:void(0);" onclick="confirmDelete('Are you sure you want to delete this user?', 'dashboard.php?delete_user=<?php echo $user['id']; ?>')">Delete</a>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </table>
 
+        <!-- Quizzes Table -->
         <h3>Quizzes</h3>
         <table>
-            <tr><th>Title</th><th>Description</th><th>Action</th></tr>
+            <tr><th>Title</th><th>Description</th><th>Created By</th><th>Action</th></tr>
             <?php while ($quiz = $quiz_result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo $quiz['title']; ?></td>
                     <td><?php echo $quiz['description']; ?></td>
-                    <td><a href="delete_quiz.php?quiz_id=<?php echo $quiz['id']; ?>">Delete</a></td>
+                    <td>
+                        <?php 
+                        // Fetch creator's name
+                        $creator_sql = "SELECT name FROM users WHERE id = ".$quiz['created_by'];
+                        $creator_result = $conn->query($creator_sql);
+                        $creator = $creator_result->fetch_assoc();
+                        echo $creator['name'];
+                        ?>
+                    </td>
+                    <td>
+                        <!-- Link to delete quiz using delete_quiz.php -->
+                        <a href="javascript:void(0);" onclick="confirmDelete('Are you sure you want to delete this quiz?', 'dashboard.php?delete_quiz=<?php echo $quiz['id']; ?>')">Delete</a>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </table>

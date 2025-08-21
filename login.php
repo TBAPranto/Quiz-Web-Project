@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 include('includes/db_connect.php');
 
@@ -82,15 +82,15 @@ $conn->close();
 </head>
 <body>
     <div class="container">
-	    <!-- Header with Navigation Menu -->
-		<header>
-			<div class="logo">
-				<img src="images/logo.png" alt="Quiz Logo" width="150">
-			</div>
-			<div class="nav-menu">
-				<a href="index.php">Home</a>
-			</div>
-		</header>
+        <!-- Header with Navigation Menu -->
+        <header>
+            <div class="logo">
+                <img src="images/logo.png" alt="Quiz Logo" width="150">
+            </div>
+            <div class="nav-menu">
+                <a href="index.php">Home</a>
+            </div>
+        </header>
         <h2>Login</h2>
 
         <form name="loginForm" action="login.php" method="POST">

@@ -11,7 +11,14 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id']; // Get logged-in user's ID
 $sql = "SELECT * FROM users WHERE id='$user_id'";
 $result = $conn->query($sql);
-$user = $result->fetch_assoc();
+
+// Check if user exists
+if ($result && $result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+} else {
+    echo "User not found.";
+    exit();
+}
 
 if (isset($_POST['send_request'])) {
     $message = $_POST['message'];
@@ -48,48 +55,60 @@ if (isset($_POST['send_request'])) {
 </head>
 <body>
 
-
     <div class="container">
-	    <!-- Header with Navigation Menu -->
-		<header>
-			<div class="logo">
-				<img src="images/logo.png" alt="Quiz Logo" width="150">
-			</div>
-			<div class="nav-menu">
-				<a href="index.php">Home</a> |
-				<?php if ($_SESSION['user_role'] == 'admin'): ?>
-					<a href="dashboard.php">Admin Panel</a> |
-				<?php endif; ?>
-				<a href="logout.php">Logout</a>
-			</div>
-		</header>
+        <!-- Header with Navigation Menu -->
+        <header>
+            <div class="logo">
+                <img src="images/logo.png" alt="Quiz Logo" width="150">
+            </div>
+            <div class="nav-menu">
+                <a href="index.php">Home</a> |
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="dashboard.php">Admin Panel</a> |
+                <?php endif; ?>
+                <a href="logout.php">Logout</a>
+            </div>
+        </header>
         <h2>My Account</h2>
-		<div class="profile">
+        <div class="profile">
         <img src="images/<?php echo !empty($user['profile_image']) ? $user['profile_image'] : 'default.jpg'; ?>" alt="Profile Image" width="100">
-        <p>Name: <?php echo $user['name']; ?></p>
-        <p>Email: <?php echo $user['email']; ?></p>
-        <p>Role: <?php echo ucfirst($user['role']); ?></p>
-		</div>
-		<a href="edit_account.php" class="button">Edit Profile</a>
+        <p>Name: <?php echo htmlspecialchars($user['name']); ?></p>
+        <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+        <p>Role: <?php echo ucfirst(htmlspecialchars($user['role'])); ?></p>
+        </div>
+        <a href="edit_account.php" class="button">Edit Profile</a>
+
+        <!-- Inbox for All Users -->
+        <?php if (isset($user['role']) && ($user['role'] == 'student' || $user['role'] == 'teacher' || $user['role'] == 'admin')): ?>
+            <h3>Inbox</h3>
+            <form action="account.php" method="POST">
+                <select name="user_id" required>
+                    <option value="">Select a user to message</option>
+                    <?php
+                    // Fetch all users from the database (excluding the logged-in user)
+                    $user_sql = "SELECT id, name, email FROM users WHERE id != '$user_id'";
+                    $user_result = $conn->query($user_sql);
+                    while ($user_row = $user_result->fetch_assoc()) {
+                        echo "<option value='{$user_row['id']}'>{$user_row['name']} - {$user_row['email']}</option>";
+                    }
+                    ?>
+                </select>
+                <button type="submit" name="connect">Connect</button>
+            </form>
+
+            <?php
+            if (isset($_POST['connect'])) {
+                $receiver_id = $_POST['user_id'];
+                
+                // Redirect to chat page with the selected user
+                header("Location: inbox.php?receiver_id=$receiver_id");
+                exit();
+            }
+            ?>
+        <?php endif; ?>
 
         <!-- Student Section -->
-        <?php if ($user['role'] == 'student' || $user['role'] == 'admin'): ?>
-            <h3>Request Role Change</h3>
-            <form action="account.php" method="POST">
-                <textarea name="message" placeholder="Request to be a teacher..." required></textarea>
-                <button type="submit" name="send_request">Send Request</button>
-            </form>
-            
-            <?php if (isset($request_sent)): ?>
-                <script>
-                    <?php if ($request_sent): ?>
-                        showPopup("Your request has been sent to the admin.");
-                    <?php else: ?>
-                        showPopup("There was an error sending your request.");
-                    <?php endif; ?>
-                </script>
-            <?php endif; ?>
-
+        <?php if (isset($user['role']) && ($user['role'] == 'student' || $user['role'] == 'admin')): ?>
             <h3>Available Quizzes</h3>
             <div class="quiz-list">
                 <?php
@@ -101,8 +120,8 @@ if (isset($_POST['send_request'])) {
                         echo "<div class='quiz-card'>";
                         echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-cover'>";
                         echo "<div class='quiz-info'>";
-                        echo "<h4>{$quiz['title']}</h4>";
-                        echo "<p>{$quiz['description']}</p>";
+                        echo "<h4>" . htmlspecialchars($quiz['title']) . "</h4>";
+                        echo "<p>" . htmlspecialchars($quiz['description']) . "</p>";
                         echo "<a href='join_quiz.php?quiz_id={$quiz['id']}' class='button'>Join Quiz</a>";
                         echo "</div></div>";
                     }
@@ -114,12 +133,12 @@ if (isset($_POST['send_request'])) {
         <?php endif; ?>
 
         <!-- Teacher Section -->
-        <?php if ($user['role'] == 'teacher' || $user['role'] == 'admin'): ?>
+        <?php if (isset($user['role']) && ($user['role'] == 'teacher' || $user['role'] == 'admin')): ?>
             <h3>Create a New Quiz</h3>
             <a href="create_quiz.php" class="button">Create a Quiz</a>
 
             <h3>Your Quizzes</h3>
-			<div class="quiz-list">
+            <div class="quiz-list">
             <?php
             // Show quizzes created by the teacher
             $quiz_sql = "SELECT * FROM quizzes WHERE created_by='$user_id'";
@@ -128,14 +147,14 @@ if (isset($_POST['send_request'])) {
                 echo "<div class='quiz-card'>";
                 echo "<img src='images/{$quiz['cover_image']}' alt='Quiz Cover' class='quiz-cover'>";
                 echo "<div class='quiz-info'>";
-                echo "<h4>{$quiz['title']}</h4>";
-                echo "<p>{$quiz['description']}</p>";
+                echo "<h4>" . htmlspecialchars($quiz['title']) . "</h4>";
+                echo "<p>" . htmlspecialchars($quiz['description']) . "</p>";
                 echo "<a href='edit_quiz.php?quiz_id={$quiz['id']}' class='button'>Edit Quiz</a> | ";
                 echo "<a href='delete_quiz.php?quiz_id={$quiz['id']}' class='button'>Delete Quiz</a>";
                 echo "</div></div>";
             }
             ?>
-			</div>
+            </div>
             <h3>Score Board</h3>
             <table class="table">
                 <tr>
@@ -156,11 +175,11 @@ if (isset($_POST['send_request'])) {
                 if ($score_result->num_rows > 0) {
                     while ($score = $score_result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>{$score['quiz_title']}</td>";
-                        echo "<td>{$score['student_name']}</td>";
-                        echo "<td>{$score['tmp_student_id']}</td>";
-                        echo "<td>{$score['score']} / {$score['total_score']}</td>"; // Show score as fraction (score / total_score)
-                        echo "<td>{$score['date_taken']}</td>";
+                        echo "<td>" . htmlspecialchars($score['quiz_title']) . "</td>";
+                        echo "<td>" . htmlspecialchars($score['student_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($score['tmp_student_id']) . "</td>";
+                        echo "<td>" . htmlspecialchars($score['score']) . " / " . htmlspecialchars($score['total_score']) . "</td>";
+                        echo "<td>" . htmlspecialchars($score['date_taken']) . "</td>";
                         echo "</tr>";
                     }
                 } else {
@@ -171,7 +190,7 @@ if (isset($_POST['send_request'])) {
         <?php endif; ?>
 
         <!-- Student Quiz Results -->
-        <?php if ($user['role'] == 'student' || $user['role'] == 'admin'): ?>
+        <?php if (isset($user['role']) && ($user['role'] == 'student' || $user['role'] == 'admin')): ?>
             <h3>Your Results</h3>
             <table class="table">
                 <tr>
@@ -188,9 +207,9 @@ if (isset($_POST['send_request'])) {
                 $result_query = $conn->query($result_sql);
                 while ($result_row = $result_query->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>{$result_row['title']}</td>";
-                    echo "<td>{$result_row['score']} / {$result_row['total_score']}</td>"; // Show score as fraction (score / total_score)
-                    echo "<td>{$result_row['date_taken']}</td>";
+                    echo "<td>" . htmlspecialchars($result_row['title']) . "</td>";
+                    echo "<td>" . htmlspecialchars($result_row['score']) . " / " . htmlspecialchars($result_row['total_score']) . "</td>";
+                    echo "<td>" . htmlspecialchars($result_row['date_taken']) . "</td>";
                     echo "</tr>";
                 }
                 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2025 at 10:49 AM
+-- Generation Time: Aug 21, 2025 at 09:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,10 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
-  `sender_id` int(11) DEFAULT NULL,
-  `receiver_id` int(11) DEFAULT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
   `message` text NOT NULL,
-  `status` enum('pending','approved') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,8 +39,10 @@ CREATE TABLE `messages` (
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `message`, `status`, `created_at`) VALUES
-(1, 2, 1, 'Please Make Me, Teacher', 'approved', '2025-08-07 18:48:21');
+INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `message`, `created_at`) VALUES
+(1, 3, 2, 'Hello Talal?', '2025-08-21 14:14:34'),
+(2, 2, 3, 'Hello Taaz!', '2025-08-21 15:09:45'),
+(3, 2, 1, 'Hello Admin!', '2025-08-21 18:34:59');
 
 -- --------------------------------------------------------
 
@@ -80,30 +81,30 @@ INSERT INTO `options` (`id`, `question_id`, `option_text`, `is_correct`) VALUES
 (17, 6, 'b) Yes', 1),
 (18, 7, 'a) 4', 1),
 (19, 7, 'b) 5', 0),
-(20, 8, 'a) HyperText Markup Language', 1),
-(21, 8, 'b) Home Tool Markup Language', 0),
-(22, 8, 'c) Hyperlinks and Text Markup Language', 0),
-(23, 8, 'd) Home Text Markup Language', 0),
-(24, 9, 'a) <script>', 0),
-(25, 9, 'b) <style>', 1),
-(26, 9, 'c) <css>', 0),
-(27, 9, 'd) <link>', 0),
-(28, 10, 'a) var x;', 1),
-(29, 10, 'b) declare x;', 0),
-(30, 10, 'c) variable x;', 0),
-(31, 10, 'd) x = var;', 0),
-(32, 11, 'a) bgcolor', 0),
-(33, 11, 'b) background-color', 1),
-(34, 11, 'c) color-background', 0),
-(35, 11, 'd) background', 0),
-(36, 12, 'a) <img>', 1),
-(37, 12, 'b) <picture>', 0),
-(38, 12, 'c) <image>', 0),
-(39, 12, 'd) <src>', 0),
-(40, 13, 'a) Fine', 0),
-(41, 13, 'b) OK', 0),
+(40, 13, 'a) Admin', 1),
+(41, 13, 'b) You don\'t know', 0),
 (42, 14, 'a) Teacher', 0),
-(43, 14, 'b) Student', 0);
+(43, 14, 'b) Student', 1),
+(48, 17, 'a) HyperText Markup Language', 1),
+(49, 17, 'b) Home Tool Markup Language', 0),
+(50, 17, 'c) Hyperlinks and Text Markup Language', 0),
+(51, 17, 'd) Home Text Markup Language', 0),
+(52, 18, 'a) <style>', 1),
+(53, 18, 'b) <link>', 0),
+(54, 18, 'c) <css>', 0),
+(55, 18, 'd) <script>', 0),
+(56, 19, 'a) color', 0),
+(57, 19, 'b) bgcolor', 0),
+(58, 19, 'c) background-color', 1),
+(59, 19, 'd) background', 0),
+(60, 20, 'a) To define the title of a webpage', 0),
+(61, 20, 'b) To include external CSS files', 0),
+(62, 20, 'c) To add JavaScript to a webpage', 1),
+(63, 20, 'd) To create hyperlinks', 0),
+(64, 21, 'a) document.write()', 1),
+(65, 21, 'b) console.log()', 0),
+(66, 21, 'c) alert()', 0),
+(67, 21, 'd) getElementById()', 0);
 
 -- --------------------------------------------------------
 
@@ -132,13 +133,13 @@ INSERT INTO `questions` (`id`, `quiz_id`, `question_text`, `correct_option`, `cr
 (5, 3, 'SQL', 1, '2025-08-07 21:14:57', 5),
 (6, 4, 'Does can meaw?', 17, '2025-08-08 01:07:20', 5),
 (7, 4, 'How many legs it has?', 18, '2025-08-08 01:07:20', 5),
-(8, 5, 'What does HTML stand for?', 1, '2025-08-08 17:25:28', 1),
-(9, 5, 'Which HTML tag is used to define an internal style sheet?', 2, '2025-08-08 17:25:28', 2),
-(10, 5, 'How do you declare a JavaScript variable?', 1, '2025-08-08 17:25:28', 5),
-(11, 5, 'Which of the following CSS properties is used to change the background color of an element?', 2, '2025-08-08 17:25:29', 5),
-(12, 5, 'Which HTML tag is used to display images on a webpage?', 1, '2025-08-08 17:25:29', 2),
 (13, 6, 'What is my name?', 40, '2025-08-09 04:54:43', 5),
-(14, 6, 'Are you a teacher or student?', 43, '2025-08-09 04:54:43', 5);
+(14, 6, 'Are you a teacher or student?', 43, '2025-08-09 04:54:43', 5),
+(17, 8, 'What does HTML stand for?', 48, '2025-08-09 10:26:46', 1),
+(18, 8, 'Which HTML tag is used to define an internal style sheet?', 52, '2025-08-09 10:26:46', 2),
+(19, 8, 'Which CSS property is used to change the background color of an element?', 58, '2025-08-09 10:26:46', 2),
+(20, 8, 'What is the purpose of the <script> tag in HTML?', 62, '2025-08-09 10:26:46', 5),
+(21, 8, 'Which JavaScript function is used to write text to the HTML document?', 64, '2025-08-09 10:26:46', 5);
 
 -- --------------------------------------------------------
 
@@ -163,8 +164,8 @@ CREATE TABLE `quizzes` (
 INSERT INTO `quizzes` (`id`, `title`, `description`, `cover_image`, `created_by`, `created_at`, `total_score`) VALUES
 (3, 'Quiz 1', 'This is a just an experiment,\r\nto see things working.', 'default_cover.jpg', 2, '2025-08-07 21:06:42', 25),
 (4, 'Quiz 2', 'A Quiz for Cats', 'default_cover.jpg', 2, '2025-08-08 01:06:05', 10),
-(5, 'Basic Web Programming Quiz', 'Test your knowledge of fundamental web programming concepts with this quiz! It covers essential topics such as HTML, CSS, JavaScript, and more. Perfect for beginners looking to assess their understanding of web development basics.', 'images.jpeg', 2, '2025-08-08 17:15:35', 15),
-(6, 'Hello Admin Is Here', 'Don\'t mind me, I\'m just testing the system.', '1517746_744742065538342_911493707_o.jpg', 1, '2025-08-09 04:44:31', 20);
+(6, 'Hello Admin Is Here^^', 'Don\'t mind me, I\'m just testing the system^^\r\n', '1517746_744742065538342_911493707_o.jpg', 1, '2025-08-09 04:44:31', 20),
+(8, 'Basic Web Programming Quiz', 'Test your knowledge of fundamental web programming concepts with this quiz! It covers essential topics such as HTML, CSS, JavaScript, and more. Perfect for beginners looking to assess their understanding of web development basics.', 'Unlikely Park Companions - Remix.png', 2, '2025-08-09 10:22:51', 15);
 
 -- --------------------------------------------------------
 
@@ -192,7 +193,10 @@ INSERT INTO `quiz_results` (`id`, `student_id`, `tmp_student_id`, `quiz_id`, `sc
 (27, 3, '221', 3, 20, '2025-08-08 05:14:06'),
 (28, 1, '1234', 4, 10, '2025-08-09 04:10:35'),
 (29, 2, '333', 6, 0, '2025-08-09 07:41:15'),
-(30, 2, '123', 6, 0, '2025-08-09 07:44:46');
+(30, 2, '123', 6, 0, '2025-08-09 07:44:46'),
+(31, 1, '222', 4, 10, '2025-08-09 09:52:19'),
+(32, 1, '213', 8, 8, '2025-08-21 19:30:51'),
+(33, 1, '333', 8, 15, '2025-08-21 19:35:03');
 
 -- --------------------------------------------------------
 
@@ -217,7 +221,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `profile_image`, `role`, `created_at`) VALUES
 (1, 'Admin', 'admin@user.com', '$2y$10$RklVbt3GVFJwcIxayAXjGOY3rn5xpP.jty3nMUn8FRLuV5stlwjk.', 'CW Profile.png', 'admin', '2025-08-07 17:46:26'),
 (2, 'Talal Bin Akbor', 'talal@user.com', '$2y$10$2H46JEnatDk/6LWXtMQk5.G/MHKt1gx3gw6GtqTAtm598JjWNJ8YW', 'CW Profile.jpg', 'teacher', '2025-08-07 18:37:24'),
-(3, 'Tajrin Islam', 'taaz@user.com', '$2y$10$J0pJcJcplndoGzzI7tXj.uIuGj3UVdY8ELLDs6640XhhGu2/7zSSe', '1696514758521o1-2.jpeg', 'student', '2025-08-07 22:29:00');
+(3, 'Tajrin Islam', 'taaz@user.com', '$2y$10$J0pJcJcplndoGzzI7tXj.uIuGj3UVdY8ELLDs6640XhhGu2/7zSSe', 'CW ProfilePT0.png', 'student', '2025-08-07 22:29:00');
 
 --
 -- Indexes for dumped tables
@@ -275,37 +279,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `options`
 --
 ALTER TABLE `options`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `quizzes`
 --
 ALTER TABLE `quizzes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `quiz_results`
 --
 ALTER TABLE `quiz_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -315,8 +319,8 @@ ALTER TABLE `users`
 -- Constraints for table `messages`
 --
 ALTER TABLE `messages`
-  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `options`
