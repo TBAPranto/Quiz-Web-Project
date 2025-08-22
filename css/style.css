@@ -122,12 +122,18 @@ form label {
 	margin-top: 8px;
 }
 
+/* Style for the select dropdown */
 form select {
     font-weight: 600;
     color: #333;
-	text-align: left;
-    display: block; /* Ensures the label is block level, taking full width */
-	margin-top: 8px;
+    text-align: left;
+    display: block;
+    margin-top: 8px;
+    padding: 10px; /* Adjust padding for size */
+    border-radius: 6px; /* Rounded corners */
+    width: 100%; /* Full width to match form input size */
+    height: 40px; /* Set the height of the dropdown */
+    box-sizing: border-box; /* Include padding and border in width/height */
 }
 
 /* Style for invalid inputs */
