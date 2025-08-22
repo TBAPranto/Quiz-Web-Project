@@ -78,20 +78,20 @@ if (isset($_POST['create_quiz'])) {
 <body>
 	
     <div class="container">
-		<!-- Header with Navigation Menu -->
-		<header>
-			<div class="logo">
-				<img src="images/logo.png" alt="Quiz Logo" width="150">
-			</div>
-			<div class="nav-menu">
-				<a href="index.php">Home</a> |
+	    <!-- Header with Navigation Menu -->
+        <header>
+            <div class="logo">
+                <img src="images/logo.png" alt="Quiz Logo" width="150">
+            </div>
+            <div class="nav-menu">
+                <a href="index.php">Home</a> |
 				<a href="account.php">My Account</a> |
-				<?php if ($_SESSION['user_role'] == 'admin'): ?>
-					<a href="dashboard.php">Admin Panel</a> |
-				<?php endif; ?>
-				<a href="logout.php">Logout</a>
-			</div>
-		</header>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="dashboard.php">Admin Panel</a> |
+                <?php endif; ?>
+                <a href="logout.php">Logout</a>
+            </div>
+        </header>
         <h2>Create a New Quiz</h2>
         <form name="quizForm" action="create_quiz.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <input type="text" name="quiz_title" placeholder="Quiz Title" required>

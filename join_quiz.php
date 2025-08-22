@@ -97,6 +97,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="container">
+	    <!-- Header with Navigation Menu -->
+        <header>
+            <div class="logo">
+                <img src="images/logo.png" alt="Quiz Logo" width="150">
+            </div>
+            <div class="nav-menu">
+                <a href="index.php">Home</a> |
+				<a href="account.php">My Account</a> |
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                    <a href="dashboard.php">Admin Panel</a> |
+                <?php endif; ?>
+                <a href="logout.php">Logout</a>
+            </div>
+        </header>
         <h2><?php echo $quiz['title']; ?></h2>
         <p class="quiz-description"><?php echo $quiz['description']; ?></p>
 

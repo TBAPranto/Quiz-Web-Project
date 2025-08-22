@@ -95,7 +95,8 @@ $conn->close();
 				<img src="images/logo.png" alt="Quiz Logo" width="150">
 			</div>
 			<div class="nav-menu">
-				<a href="index.php">Home</a>
+				<a href="index.php">Home</a> |
+				<a href="login.php">Log in</a>
 			</div>
 		</header>
         <h2>Register</h2>
