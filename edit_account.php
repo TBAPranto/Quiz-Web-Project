@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch user data excluding id, role, and created_at
-$sql = "SELECT id, name, email, profile_image, role FROM users WHERE id = ?";
+$sql = "SELECT id, name, email, profile_image, role, password FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -26,7 +26,7 @@ $user_data = $result->fetch_assoc();
 if ($_SESSION['user_role'] == 'admin' && isset($_GET['id']) && $_GET['id'] != $user_id) {
     // Fetch the user details that the admin is editing
     $edit_user_id = $_GET['id'];
-    $sql = "SELECT id, name, email, profile_image, role FROM users WHERE id = ?";
+    $sql = "SELECT id, name, email, profile_image, role, password FROM users WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $edit_user_id);
     $stmt->execute();
@@ -42,7 +42,21 @@ if ($_SESSION['user_role'] == 'admin' && isset($_GET['id']) && $_GET['id'] != $u
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $role = $_POST['role']; // Role field added for admin editing roles
+    $password = $_POST['password']; // New password
+
+    // If password is provided, hash it, otherwise, retain the old password
+    if (!empty($password)) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    } else {
+        $hashed_password = $user_data['password']; // Keep the existing password
+    }
+
+    // Determine whether to update the role or not
+    if ($_SESSION['user_role'] == 'admin') {
+        $role = $_POST['role']; // Admin can change the role
+    } else {
+        $role = $user_data['role']; // Non-admin users keep their existing role
+    }
 
     // Handle profile image upload
     if ($_FILES['profile_image']['name']) {
@@ -64,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Update user information in the database
-    $update_sql = "UPDATE users SET name = ?, email = ?, profile_image = ?, role = ? WHERE id = ?";
+    $update_sql = "UPDATE users SET name = ?, email = ?, profile_image = ?, role = ?, password = ? WHERE id = ?";
     $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("ssssi", $name, $email, $image_name, $role, $user_data['id']);
+    $update_stmt->bind_param("sssssi", $name, $email, $image_name, $role, $hashed_password, $user_data['id']);
 
     if ($update_stmt->execute()) {
         echo "<script>alert('Account updated successfully!')</script>";
@@ -110,6 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-section">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
+            </div>
+
+            <div class="form-section">
+                <label for="password">New Password (Leave blank to keep current password):</label>
+                <input type="password" id="password" name="password">
             </div>
 
             <div class="form-section">
