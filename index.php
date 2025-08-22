@@ -8,7 +8,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz for Fun</title>
+    <title>QuizHub</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -33,7 +33,8 @@ session_start();
             </div>
         </header>
 
-        <h1 class="page-title">Quiz for Fun</h1>
+        <h1 class="page-title">QuizHub</h1>
+		<h4 class="page-title">"Create Quizzes, Take Tests, Track Your Progress"</h4>
 
         <!-- Search Bar -->
         <form action="index.php" method="GET" class="search-form">
