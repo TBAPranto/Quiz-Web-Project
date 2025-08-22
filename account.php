@@ -62,9 +62,9 @@ if (isset($_POST['send_request'])) {
                 <img src="images/logo.png" alt="Quiz Logo" width="150">
             </div>
             <div class="nav-menu">
-                <a href="index.php">Home</a> |
+                <a href="index.php">Home</a>
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
-                    <a href="dashboard.php">Admin Panel</a> |
+                    <a href="dashboard.php">Admin Panel</a>
                 <?php endif; ?>
                 <a href="logout.php">Logout</a>
             </div>

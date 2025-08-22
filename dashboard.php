@@ -90,8 +90,8 @@ $message_result = $conn->query($message_sql);
                 <img src="images/logo.png" alt="Quiz Logo" width="150">
             </div>
             <div class="nav-menu">
-                <a href="account.php">My Account</a> | 
-                <a href="index.php">Home</a> | 
+                <a href="account.php">My Account</a>
+                <a href="index.php">Home</a>
                 <a href="logout.php">Logout</a>
             </div>
         </header>

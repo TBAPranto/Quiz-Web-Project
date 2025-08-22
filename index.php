@@ -22,11 +22,11 @@ session_start();
                 <?php
                 if (isset($_SESSION['user_id'])) {
                     // Show My Account and Logout when the user is logged in
-                    echo "<a href='account.php'>My Account</a> | ";
+                    echo "<a href='account.php'>My Account</a>";
                     echo "<a href='logout.php'>Logout</a>";
                 } else {
                     // Show Login and Register when the user is not logged in
-                    echo "<a href='login.php'>Login</a> | ";
+                    echo "<a href='login.php'>Login</a>";
                     echo "<a href='register.php'>Register</a>";
                 }
                 ?>

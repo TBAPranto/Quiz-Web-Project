@@ -71,10 +71,10 @@ if (isset($_POST['save_quiz'])) {
                 <img src="images/logo.png" alt="Quiz Logo" width="150">
             </div>
             <div class="nav-menu">
-                <a href="index.php">Home</a> |
-				<a href="account.php">My Account</a> |
+                <a href="index.php">Home</a>
+				<a href="account.php">My Account</a>
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
-                    <a href="dashboard.php">Admin Panel</a> |
+                    <a href="dashboard.php">Admin Panel</a>
                 <?php endif; ?>
                 <a href="logout.php">Logout</a>
             </div>
