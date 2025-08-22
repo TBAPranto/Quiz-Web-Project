@@ -43,6 +43,31 @@ header .nav-menu a:hover {
     transform: translateY(-2px);  /* Lift effect */
 }
 
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+    header {
+        padding: 10px 15px; /* Slightly reduced padding for mobile */
+    }
+    header .logo img {
+        width: 40px; /* Reduce logo size on mobile */
+        height: 40px;
+    }
+    header .nav-menu {
+        gap: 10px; /* Reduce gap between menu items */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    header {
+        flex-direction: column; /* Stack items vertically */
+        text-align: left;  /* Align text to the left */
+    }
+    header .nav-menu {
+        flex-direction: column; /* Stack nav links vertically */
+        gap: 8px;
+        margin-top: 10px; /* Space between the logo and menu */
+    }
+}
 
 /* Container */
 .container {
