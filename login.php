@@ -89,7 +89,7 @@ $conn->close();
             </div>
             <div class="nav-menu">
                 <a href="index.php">Home</a> |
-				<a href="register.php">Sign Up</a>
+				<a href="register.php">Register</a>
             </div>
         </header>
         <h2>Login</h2>
